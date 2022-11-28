@@ -56,7 +56,7 @@ is 25.
 -}
 -- DON'T FORGET TO SPECIFY THE TYPE IN HERE
 sumOfSquares :: Integer -> Integer -> Integer
-sumOfSquares x y = x^2 + y^2
+sumOfSquares x y = x * x + y * y
 
 {- | Implement a function that returns the last digit of a given number.
 
@@ -108,7 +108,7 @@ string.
 subString :: Int -> Int -> [Char] -> [Char]
 subString start end str
     | end < 0 || start > end = []
-    | start < 0 = subString 0 end str
+    | start < 0 = take (end + 1) str
     | otherwise = take (end - start + 1) (drop start str)
 
 {- | Write a function that takes a String — space separated numbers,
@@ -136,12 +136,11 @@ and lower than 6 elements (4, 5, 6, 7, 8 and 9).
 🕯 HINT: Use recursion to implement this function.
 -}
 lowerAndGreater :: Int -> [Int] -> [Char]
-lowerAndGreater n list = show n ++ " is greater than " ++ show (countCondition 0 (< n) list) ++ " elements and lower than " ++ show (countCondition 0 (> n) list) ++ " elements"
+lowerAndGreater n list = show n ++ countLowerAndGreater 0 0 list
     where
-        countCondition :: Int -> (Int -> Bool) -> [Int] -> Int
-        countCondition result f list = 
-            if null list
-            then result
-            else if f (head list)
-                then countCondition (result + 1) f (tail list)
-                else countCondition result f (tail list)
+        countLowerAndGreater :: Int -> Int -> [Int] -> [Char]
+        countLowerAndGreater l g rl
+            | null rl = " is greater than " ++ show l ++ " elements and lower than " ++ show g ++ " elements"
+            | n > head rl = countLowerAndGreater (l + 1) g (tail rl)
+            | n < head rl = countLowerAndGreater  l (g + 1) (tail rl)
+            | otherwise = countLowerAndGreater  l g (tail rl)
